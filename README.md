@@ -30,10 +30,67 @@ The Poisson distribution is the discrete probability distribution of the number 
 
 # Program :
 
- 
+````
+import numpy as np
+import math
+import scipy.stats
+
+L = [int(i) for i in input().split()]
+
+N = len(L)
+M = max(L)
+
+X = []
+f = []
+
+for i in range(M+1):
+    c = 0
+    for j in range(N):
+        if L[j] == i:
+            c = c + 1
+    f.append(c)
+    X.append(i)
+
+sf = np.sum(f)
+
+p = []
+for i in range(M+1):
+    p.append(f[i] / sf)
+
+mean = np.inner(X, p)
+
+p = []
+E = []
+xi = []
+
+print("X   P(X=x)   Obs.Fr   Exp.Fr   Chi")
+print("---------------------------------------")
+
+for x in range(M+1):
+    p.append(math.exp(-mean) * mean**x / math.factorial(x))
+    E.append(p[x] * sf)
+    xi.append((f[x] - E[x])**2 / E[x])
+    
+    print("%2.2f  %2.3f  %4.2f  %4.2f  %4.2f" % (x, p[x], f[x], E[x], xi[x]))
+
+print("---------------------------------------")
+
+cal_chi2_sq = np.sum(xi)
+print("Calculated Chi-square value =", round(cal_chi2_sq,2))
+
+table_chi2 = scipy.stats.chi2.ppf(1-0.01, df=M-1)
+print("Table Chi-square value =", round(table_chi2,2))
+
+
+if cal_chi2_sq < table_chi2:
+    print("Poisson distribution is a GOOD fit for the data.")
+else:
+    print("Poisson distribution is NOT a good fit for the data.")
+````
 
 # Output : 
 
+<img width="479" height="320" alt="image" src="https://github.com/user-attachments/assets/54897eff-5687-4427-a627-e8d6c2fcdc68" />
 
 
 # Results
